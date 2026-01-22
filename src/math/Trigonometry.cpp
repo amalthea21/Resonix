@@ -1,4 +1,4 @@
-#include "../include/Math.h"
+#include "../include/Math.hpp"
 
 namespace Math {
     float Sine(float angle) {
