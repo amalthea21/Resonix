@@ -31,7 +31,7 @@ namespace Math {
 
         for (int i = 1; i <= 10; i++)
         {
-            term *= -radians * radians / ((2 * i - 1) * (2 * i));
+            term *= -(radians * radians) / ((2 * i - 1) * (2 * i));
             sum += term;
         }
 
@@ -54,5 +54,14 @@ namespace Math {
             return getNaN();
 
         return Cosine(angle) / sin_val;
+    }
+
+    float Hann(float n, float N) {
+        if (isNaN(n) || isNaN(N))
+            return getNaN();
+
+        float cos_arg = 180.0f * n / (N - 1);
+
+        return 0.5f * (1.0f - Cosine(cos_arg));
     }
 }
