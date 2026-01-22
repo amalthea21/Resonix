@@ -10,6 +10,9 @@ add_library(resonix STATIC
         src/generator/Trigonometric.cpp
         src/generator/Primitives.cpp
         src/generator/Hann.cpp
+        include/Math.h
+        src/math/Trigonometry.cpp
+        src/math/Utils.cpp
 )
 
 target_include_directories(resonix PUBLIC

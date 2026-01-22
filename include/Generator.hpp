@@ -1,3 +1,5 @@
+#include "Math.h"
+
 namespace Generator {
     float* Sine(int sample_length, float frequency, const float phaseIncrement);
     float* Square(int sample_length, float frequency, const float phaseIncrement);
