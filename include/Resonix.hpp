@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Generator.hpp"
+
 /**
 * @namespace Resonix
  * @brief Audio sample generation library
