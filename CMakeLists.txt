@@ -14,6 +14,7 @@ add_library(resonix STATIC
         src/math/Trigonometry.cpp
         src/math/Utils.cpp
         src/math/NaN.cpp
+        tests/test_main.cpp
 )
 
 target_include_directories(resonix PUBLIC
@@ -23,3 +24,12 @@ target_include_directories(resonix PUBLIC
 target_compile_options(resonix PRIVATE
         -Wall -Wextra -Wpedantic
 )
+
+# Testing
+add_executable(
+        resonix_test tests/test_main.cpp
+)
+
+target_link_libraries(resonix_test PRIVATE resonix)
+
+# ---

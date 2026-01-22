@@ -1,3 +1,5 @@
+#pragma once
+
 /**
 * @namespace Resonix
  * @brief Audio sample generation library

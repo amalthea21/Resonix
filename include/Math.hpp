@@ -1,3 +1,5 @@
+#pragma once
+
 /**
  * @namespace Math
  * @brief Mathematical utility functions for audio processing

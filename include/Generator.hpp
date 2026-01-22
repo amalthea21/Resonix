@@ -1,4 +1,4 @@
-#include "Math.hpp"
+#pragma once
 
 /**
  * @namespace Generator
