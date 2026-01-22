@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 4.1)
-project(Resonix)
+project(Resonix VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(Resonix main.cpp)
+add_library(resonix STATIC
+        src/Resonix.cpp
+)
+
+target_include_directories(resonix PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(resonix PRIVATE
+        -Wall -Wextra -Wpedantic
+)
