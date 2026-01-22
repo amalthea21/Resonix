@@ -8,6 +8,8 @@ namespace Resonix {
         float* samples = new float[sample_length * SAMPLE_RATE];
         const float phase_increment = (2.0f * 3.14159265359f * frequency) / SAMPLE_RATE;
 
+        if (!samples) return nullptr;
+
         switch (shape) {
 
         }

@@ -1,6 +1,6 @@
 /**
 * @namespace Resonix
- * @brief Audio waveform generation library
+ * @brief Audio sample generation library
  */
 namespace Resonix {
 #ifndef RESONIX_SAMPLE_RATE

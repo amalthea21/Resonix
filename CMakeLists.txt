@@ -7,6 +7,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(resonix STATIC
         src/Resonix.cpp
+        src/generator/Trigonometric.cpp
+        src/generator/Primitives.cpp
+        src/generator/Hann.cpp
 )
 
 target_include_directories(resonix PUBLIC
