@@ -2,11 +2,8 @@
 
 namespace Math {
     float fmod(float a, float b) {
-        if (b == 0.0f) {
-            // IEEE 754 NaN: exponent all 1s, mantissa non-zero
-            unsigned int nan_bits = 0x7FC00000;
-            return *reinterpret_cast<float*>(&nan_bits);
-        }
+        if (b == 0.0f)
+            return getNaN();
 
         float quotient = a / b;
         float truncated_quotient = static_cast<int>(quotient);
@@ -17,10 +14,16 @@ namespace Math {
     }
 
     float min(float a, float b) {
+        if (isNaN(a) || isNaN(b))
+            return getNaN();
+
         return a > b ? a : b;
     }
 
     float abs(float a) {
+        if (isNaN(a))
+            return getNaN();
+
         return a < 0 ? -a : a;
     }
 }

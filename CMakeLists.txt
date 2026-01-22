@@ -13,6 +13,7 @@ add_library(resonix STATIC
         include/Math.hpp
         src/math/Trigonometry.cpp
         src/math/Utils.cpp
+        src/math/NaN.cpp
 )
 
 target_include_directories(resonix PUBLIC

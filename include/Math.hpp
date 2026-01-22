@@ -90,4 +90,8 @@ namespace Math {
      * float distance = Math::abs(value1 - value2);
      */
     float abs(float a);
+
+    float getNaN();
+
+    bool isNaN(float a);
 }
