@@ -6,6 +6,8 @@
  * audio synthesis and digital signal processing calculations.
  */
 namespace Math {
+    constexpr float PI = 3.14159265358979323846f;
+
     /**
      * @brief Computes the sine of an angle
      *
