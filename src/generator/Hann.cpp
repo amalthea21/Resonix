@@ -3,7 +3,6 @@
 #include "Math.hpp"
 
 namespace Generator {
-
     float* Hann(int sample_length, float frequency, const float phaseIncrement) {
         float* samples = new float[static_cast<int>(sample_length * Resonix::SAMPLE_RATE)];
         float t, sine_wave, hann_window;
