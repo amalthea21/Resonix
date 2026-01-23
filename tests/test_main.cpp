@@ -3,9 +3,9 @@
 #include "Resonix.hpp"
 
 int main() {
-    float* samples = Resonix::generateSamples(Resonix::Shape::SINE, 1, 440.0f);
+    float* samples = Resonix::generateSamples(Resonix::Shape::PHASED_HANN, 1, 440.0f);
 
-    for (int i = 0; i < 1*44100; i++) {
+    for (int i = 0; i < 1000; i++) {
         std::cout << i << "," << samples[i] << std::endl;
     }
 

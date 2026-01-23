@@ -30,5 +30,5 @@ add_executable(resonix_test tests/test_main.cpp)
 target_link_libraries(resonix_test PRIVATE resonix)
 
 set_target_properties(resonix_test PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
