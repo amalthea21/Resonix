@@ -1,4 +1,4 @@
-#include "../include/Resonix.hpp"
+#include "Resonix.hpp"
 
 namespace Resonix {
     float *generateSamples(Shape shape, int sample_length, float frequency) {
@@ -32,5 +32,10 @@ namespace Resonix {
             default:
                 return nullptr;
         }
+    }
+
+    float *lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance) {
+        float* applied_samples = Filter::apply_lowpass_filter(samples, sample_length, cutoff_hz, resonance);
+        return applied_samples;
     }
 }

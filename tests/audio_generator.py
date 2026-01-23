@@ -1,7 +1,7 @@
 import resonix
 import soundfile as sf
 
-samples = resonix.generate_samples(resonix.Shape.PHASED_HANN, 5, 164.0)
+samples = resonix.generate_samples(resonix.Shape.SINE, 5, 164.0)
 print(f"Generated {len(samples)} samples")
 print(f"Sample rate: {resonix.SAMPLE_RATE}")
 

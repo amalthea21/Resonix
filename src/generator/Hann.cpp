@@ -10,7 +10,7 @@ namespace Generator {
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
             t = static_cast<float>(i) / Resonix::SAMPLE_RATE;
-            sine_wave = Math::Sine(2.0f * Math::PI * frequency * t);
+            sine_wave = Math::Sine(360.0f * frequency * t);
             hann_window = Math::Hann(static_cast<float>(i), N);
             samples[i] = sine_wave * hann_window;
         }
@@ -20,16 +20,18 @@ namespace Generator {
 
     float *Phased_Hann(int sample_length, float frequency, const float phaseIncrement) {
         float* samples = new float[sample_length * Resonix::SAMPLE_RATE];
-        int totalSamples = sample_length * Resonix::SAMPLE_RATE;
+        float t, sine_wave, hann_window;
+        int N = static_cast<int>(sample_length * Resonix::SAMPLE_RATE);
+        float phaseOffsetSamples = (phaseIncrement / (2.0f * Math::PI)) * N;
 
-        float samplesPerCycle = Resonix::SAMPLE_RATE / frequency;
+        for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
+            t = static_cast<float>(i) / Resonix::SAMPLE_RATE;
+            sine_wave = Math::Sine(360.0f * frequency * t + phaseIncrement * 180.0f / Math::PI);
+            float windowPosition = Math::fmod(static_cast<float>(i) + phaseOffsetSamples, static_cast<float>(N));
+            if (windowPosition < 0.0f) windowPosition += N;
 
-        for (int i = 0; i < totalSamples; i++) {
-            float phaseOffset = phaseIncrement / (2.0f * Math::PI);
-            float position = Math::fmod(i / samplesPerCycle + phaseOffset, 1.0f);
-            float n = position * samplesPerCycle;
-
-            samples[i] = Math::Hann(n, samplesPerCycle);
+            hann_window = Math::Hann(windowPosition, N);
+            samples[i] = sine_wave * hann_window;
         }
 
         return samples;
