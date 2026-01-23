@@ -17,14 +17,16 @@ namespace Generator {
 
     float *Phased_Hann(int sample_length, float frequency, const float phaseIncrement) {
         float* samples = new float[sample_length * Resonix::SAMPLE_RATE];
-        float t, phase;
         int totalSamples = sample_length * Resonix::SAMPLE_RATE;
 
+        float samplesPerCycle = Resonix::SAMPLE_RATE / frequency;
+
         for (int i = 0; i < totalSamples; i++) {
-            t = static_cast<float>(i) / Resonix::SAMPLE_RATE;
-            phase = Math::fmod(t * frequency + phaseIncrement / (2.0f * Math::PI), 1.0f);
-            float n = phase * totalSamples;
-            samples[i] = Math::Hann(n, static_cast<float>(totalSamples));
+            float phaseOffset = phaseIncrement / (2.0f * Math::PI);
+            float position = Math::fmod(i / samplesPerCycle + phaseOffset, 1.0f);
+            float n = position * samplesPerCycle;
+
+            samples[i] = Math::Hann(n, samplesPerCycle);
         }
 
         return samples;

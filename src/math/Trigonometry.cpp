@@ -41,19 +41,29 @@ namespace Math {
     float Tangent(float angle) {
         float cos_val = Cosine(angle);
 
-        if (isNaN(cos_val))
+        if (isNaN(cos_val) || abs(cos_val) < 0.001f)
             return getNaN();
 
-        return Sine(angle) / cos_val;
+        float result = Sine(angle) / cos_val;
+
+        if (result > 10.0f) return 10.0f;
+        if (result < -10.0f) return -10.0f;
+
+        return result;
     }
 
     float Cotangent(float angle) {
         float sin_val = Sine(angle);
 
-        if (isNaN(sin_val))
+        if (isNaN(sin_val) || abs(sin_val) < 0.001f)
             return getNaN();
 
-        return Cosine(angle) / sin_val;
+        float result = Cosine(angle) / sin_val;
+
+        if (result > 10.0f) return 10.0f;
+        if (result < -10.0f) return -10.0f;
+
+        return result;
     }
 
     float Hann(float n, float N) {

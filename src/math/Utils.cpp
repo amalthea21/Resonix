@@ -17,7 +17,7 @@ namespace Math {
         if (isNaN(a) || isNaN(b))
             return getNaN();
 
-        return a > b ? a : b;
+        return a < b ? a : b;
     }
 
     float abs(float a) {
