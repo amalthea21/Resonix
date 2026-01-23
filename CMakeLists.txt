@@ -24,15 +24,6 @@ target_compile_options(resonix PRIVATE
         -Wall -Wextra -Wpedantic
 )
 
-# Testing
-add_executable(resonix_test tests/test_main.cpp)
-
-target_link_libraries(resonix_test PRIVATE resonix)
-
-set_target_properties(resonix_test PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
-)
-
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
 
 if(BUILD_PYTHON_BINDINGS)
