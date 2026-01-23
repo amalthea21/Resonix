@@ -33,11 +33,9 @@ set_target_properties(resonix_test PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
 
-# Python bindings (optional - only if pybind11 is available)
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
 
 if(BUILD_PYTHON_BINDINGS)
-    # Try to find pybind11 using Python
     execute_process(
             COMMAND python3 -c "import pybind11; print(pybind11.get_cmake_dir())"
             OUTPUT_VARIABLE PYBIND11_CMAKE_DIR
