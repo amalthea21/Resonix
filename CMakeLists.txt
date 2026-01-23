@@ -32,3 +32,36 @@ target_link_libraries(resonix_test PRIVATE resonix)
 set_target_properties(resonix_test PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
+
+# Python bindings (optional - only if pybind11 is available)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+
+if(BUILD_PYTHON_BINDINGS)
+    # Try to find pybind11 using Python
+    execute_process(
+            COMMAND python3 -c "import pybind11; print(pybind11.get_cmake_dir())"
+            OUTPUT_VARIABLE PYBIND11_CMAKE_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_QUIET
+    )
+
+    if(PYBIND11_CMAKE_DIR)
+        list(APPEND CMAKE_PREFIX_PATH ${PYBIND11_CMAKE_DIR})
+    endif()
+
+    find_package(pybind11 CONFIG)
+
+    if(pybind11_FOUND)
+        pybind11_add_module(resonix_python python/bindings.cpp)
+
+        target_link_libraries(resonix_python PRIVATE resonix)
+
+        set_target_properties(resonix_python PROPERTIES
+                OUTPUT_NAME resonix
+        )
+
+        message(STATUS "Python bindings will be built")
+    else()
+        message(WARNING "pybind11 not found. Python bindings will not be built.")
+    endif()
+endif()
