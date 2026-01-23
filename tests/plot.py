@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 samples = resonix.generate_samples(resonix.Shape.HANN, 10, 440.0)
-samples = resonix.lowpass_filter(samples, 1000)
 
 time = np.linspace(0, 1, len(samples))
 

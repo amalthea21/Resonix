@@ -92,4 +92,34 @@ namespace Resonix {
      * delete[] resonant;
      */
     float* lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
+
+    /**
+     * @brief Applies a highpass filter to audio samples using a biquad filter design
+     *
+     * Filters the input audio samples with a second-order resonant highpass filter,
+     * removing low frequencies below the specified cutoff point while preserving
+     * higher frequencies. Uses a digital biquad filter implementation.
+     *
+     * @param samples Pointer to input audio samples to filter
+     * @param sample_length Number of samples in the input/output buffer
+     * @param cutoff_hz Cutoff frequency in Hz (e.g., 200.0 for 200Hz highpass)
+     * @param resonance Resonance/Q factor of the filter (default: 0.707f for Butterworth response)
+     * @return float* Pointer to dynamically allocated array of filtered samples
+     *
+     * @note Caller is responsible for freeing the returned array with delete[]
+     * @warning Returns nullptr if allocation fails, input is invalid, or parameters are out of range
+     * @note Higher resonance values (e.g., > 0.9) create a resonant peak near the cutoff frequency
+     * @note For stability, resonance should typically be between 0.5 and 10.0
+     *
+     * @example
+     * // Remove low-frequency rumble below 80Hz
+     * float* filtered = Resonix::highpass_filter(samples, 44100, 80.0f, 0.707f);
+     * delete[] filtered;
+     *
+     * @example
+     * // Create telephone effect (remove bass)
+     * float* phone = Resonix::highpass_filter(samples, 44100, 300.0f, 0.707f);
+     * delete[] phone;
+     */
+    float* highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
 }

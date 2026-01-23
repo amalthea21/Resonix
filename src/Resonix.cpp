@@ -38,4 +38,9 @@ namespace Resonix {
         float* applied_samples = Filter::apply_lowpass_filter(samples, sample_length, cutoff_hz, resonance);
         return applied_samples;
     }
+
+    float *highpass_filter(const float *samples, int sample_length, float cutoff_hz, float resonance) {
+        float* applied_samples = Filter::apply_highpass_filter(samples, sample_length, cutoff_hz, resonance);
+        return applied_samples;
+    }
 }

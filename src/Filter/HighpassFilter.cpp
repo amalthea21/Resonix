@@ -1,7 +1,7 @@
 #include "Filter.hpp"
 
 namespace Filter {
-    float* apply_lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance) {
+    float* apply_highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance) {
         if (!samples || sample_length <= 0 || cutoff_hz <= 0)
             return nullptr;
 
@@ -16,8 +16,8 @@ namespace Filter {
         float alpha = Math::Sine(omega_degrees) / (2.0f * resonance);
         float cos_omega = Math::Cosine(omega_degrees);
 
-        float b0 = (1.0f - cos_omega) / 2.0f;
-        float b1 = 1.0f - cos_omega;
+        float b0 = (1.0f + cos_omega) / 2.0f;
+        float b1 = -(1.0f - cos_omega);
         float b2 = b0;
         float a0 = 1.0f + alpha;
         float a1 = -2.0f * cos_omega;

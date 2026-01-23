@@ -15,6 +15,7 @@ add_library(resonix STATIC
         src/math/Utils.cpp
         src/math/NaN.cpp
         src/Filter/LowpassFilter.cpp
+        src/Filter/HighpassFilter.cpp
 )
 
 target_include_directories(resonix PUBLIC
