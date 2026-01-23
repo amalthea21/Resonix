@@ -1,11 +1,20 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <stdexcept>
 #include "Resonix.hpp"
 
 namespace py = pybind11;
 
 // Wrapper function that returns a NumPy array instead of raw pointer
 py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length, float frequency) {
+    // Validate inputs
+    if (sample_length <= 0) {
+        throw std::invalid_argument("sample_length must be positive");
+    }
+    if (frequency <= 0.0f) {
+        throw std::invalid_argument("frequency must be positive");
+    }
+
     // Generate samples using the C++ function
     float* samples_ptr = Resonix::generateSamples(shape, sample_length, frequency);
 
@@ -14,20 +23,20 @@ py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length,
     }
 
     // Calculate total number of samples
-    size_t total_samples = sample_length * Resonix::SAMPLE_RATE;
+    size_t total_samples = static_cast<size_t>(sample_length) * Resonix::SAMPLE_RATE;
 
     // Create a NumPy array that owns the data
     // The capsule will handle deletion when Python is done with the array
     py::capsule free_when_done(samples_ptr, [](void *f) {
-        float *foo = reinterpret_cast<float *>(f);
-        delete[] foo;
+        float *data = reinterpret_cast<float *>(f);
+        delete[] data;
     });
 
     return py::array_t<float>(
-        {total_samples},           // shape
-        {sizeof(float)},           // strides
-        samples_ptr,               // data pointer
-        free_when_done            // capsule for cleanup
+        {static_cast<py::ssize_t>(total_samples)},  // shape
+        {sizeof(float)},                             // strides
+        samples_ptr,                                 // data pointer
+        free_when_done                               // capsule for cleanup
     );
 }
 
@@ -38,7 +47,7 @@ PYBIND11_MODULE(resonix, m) {
     m.attr("SAMPLE_RATE") = Resonix::SAMPLE_RATE;
 
     // Expose the Shape enum
-    py::enum_<Resonix::Shape>(m, "Shape", py::arithmetic())
+    py::enum_<Resonix::Shape>(m, "Shape")
         .value("SINE", Resonix::Shape::SINE, "Sine wave")
         .value("SQUARE", Resonix::Shape::SQUARE, "Square wave")
         .value("TRIANGLE", Resonix::Shape::TRIANGLE, "Triangle wave")

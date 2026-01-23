@@ -2,7 +2,7 @@
 
 namespace Resonix {
     float *generateSamples(Shape shape, int sample_length, float frequency) {
-        if (sample_length <= 0 || sample_length <= 0.0f)
+        if (sample_length <= 0 || frequency <= 0.0f)
             return nullptr;
 
         float* samples = new float[sample_length * SAMPLE_RATE];
