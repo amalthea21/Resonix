@@ -1,6 +1,5 @@
 #include "Filter.hpp"
 
-
 namespace Filter {
     struct BiquadFilter {
         float b0, b1, b2;
@@ -31,9 +30,11 @@ namespace Filter {
         BiquadFilter filter;
 
         float omega = 2.0f * Math::PI * cutoff_hz / Resonix::SAMPLE_RATE;
-        float alpha = Math::Sine(omega) / (2.0f * resonance);
 
-        float cos_omega = Math::Cosine(omega);
+        // Convert radians to degrees for Math::Sine and Math::Cosine
+        float omega_degrees = omega * 180.0f / Math::PI;
+        float alpha = Math::Sine(omega_degrees) / (2.0f * resonance);
+        float cos_omega = Math::Cosine(omega_degrees);
 
         float b0 = (1.0f - cos_omega) / 2.0f;
         float b1 = 1.0f - cos_omega;
