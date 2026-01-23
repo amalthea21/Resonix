@@ -54,7 +54,8 @@ pip install --upgrade pip
 
 # Install dependencies
 echo "📦 Installing dependencies..."
-pip install pybind11 numpy matplotlib soundfile
+pip install --force-reinstall --no-cache-dir numpy
+pip install pybind11 matplotlib soundfile
 
 # Build and install the package in editable mode
 echo "🔨 Building Resonix..."
