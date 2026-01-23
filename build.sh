@@ -37,25 +37,35 @@ echo ""
 echo "✨ Cleanup complete!"
 echo ""
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    echo "⚠️  Virtual environment not found. Creating one..."
-    python3 -m venv venv
-    echo "✅ Virtual environment created"
+# Remove and recreate virtual environment to fix dependency issues
+if [ -d "venv" ]; then
+    echo "🗑️  Removing existing virtual environment..."
+    rm -rf venv
 fi
+
+echo "🆕 Creating fresh virtual environment..."
+python3 -m venv venv
+echo "✅ Virtual environment created"
 
 # Activate virtual environment
 echo "🔄 Activating virtual environment..."
 source venv/bin/activate
 
-# Upgrade pip
-echo "📦 Upgrading pip..."
-pip install --upgrade pip
+# Upgrade pip and setuptools
+echo "📦 Upgrading pip, setuptools, and wheel..."
+pip install --upgrade pip setuptools wheel
 
-# Install dependencies
+# Install dependencies in correct order
 echo "📦 Installing dependencies..."
-pip install --force-reinstall --no-cache-dir numpy
-pip install pybind11 matplotlib soundfile
+pip install numpy
+pip install pybind11
+
+# Install matplotlib and its dependencies (this will handle kiwisolver)
+echo "📦 Installing matplotlib and dependencies..."
+pip install matplotlib
+
+# Install remaining dependencies
+pip install soundfile
 
 # Build and install the package in editable mode
 echo "🔨 Building Resonix..."
@@ -66,7 +76,10 @@ echo "✅ Build complete!"
 echo ""
 echo "🧪 Testing installation..."
 python -c "import resonix; print(f'✓ Resonix installed successfully! Sample rate: {resonix.SAMPLE_RATE} Hz')"
+python -c "import numpy; print(f'✓ NumPy installed successfully!')"
+python -c "import matplotlib.pyplot as plt; print(f'✓ Matplotlib installed successfully!')"
+python -c "import soundfile; print(f'✓ SoundFile installed successfully!')"
 
 echo ""
-echo "💡 To activate the virtual environment in the future, run:"
+echo "💡 To activate the virtual environment, run:"
 echo "   source venv/bin/activate"
