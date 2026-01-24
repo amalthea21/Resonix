@@ -20,8 +20,8 @@ ext_modules = [
             'src/math/Trigonometry.cpp',
             'src/math/Utils.cpp',
             'src/math/NaN.cpp',
-            'src/Filter/LowpassFilter.cpp',
-            'src/Filter/HighpassFilter.cpp',
+            'src/Filter/FormantFilter.cpp',
+            'src/Filter/PassFilter.cpp',
         ],
         include_dirs=[
             get_pybind_include(),

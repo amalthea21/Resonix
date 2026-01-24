@@ -123,4 +123,6 @@ namespace Resonix {
      * delete[] phone;
      */
     std::unique_ptr<float[]> highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
+
+    std::unique_ptr<float[]> formant_filter(const float* samples, int sample_length, float peak, float mix, float spread);
 }

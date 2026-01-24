@@ -24,6 +24,10 @@ namespace Filter {
             return y;
         }
     };
+
     std::unique_ptr<float[]> apply_lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance);
+
     std::unique_ptr<float[]> apply_highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance);
+
+    std::unique_ptr<float[]> apply_formant_filter(const float* samples, int sample_length, float peak, float mix, float spread);
 }

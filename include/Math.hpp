@@ -21,6 +21,21 @@ namespace Math {
      */
     float Sine(float degrees);
 
+
+    /**
+     * @brief Clamps a value between minimum and maximum bounds
+     *
+     * @param value The input value to clamp
+     * @param min Lower bound (inclusive)
+     * @param max Upper bound (inclusive)
+     * @return float Clamped value in range [min, max]
+     *
+     * @note Returns min if value < min, max if value > max, otherwise returns value unchanged
+     * @note Ensure min <= max for correct behavior. If min > max, behavior is undefined.
+     * @see Sine(), Cosine(), Tangent()
+     */
+    float clamp(float value, float min, float max);
+
     /**
      * @brief Computes the cosine of an angle
      *

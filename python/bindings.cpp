@@ -120,7 +120,59 @@ py::array_t<float> highpassFilterNumPy(py::array_t<float> samples, float cutoff_
 
     float* raw_ptr = filtered_ptr.release();
 
-    // Create capsule with explicit cleanup and null check
+    auto cleanup = [](void *f) {
+        if (f) {
+            float *data = static_cast<float*>(f);
+            delete[] data;
+        }
+    };
+
+    py::capsule free_when_done(raw_ptr, cleanup);
+
+    return py::array_t<float>(
+        {static_cast<py::ssize_t>(sample_length)},
+        {sizeof(float)},
+        raw_ptr,
+        free_when_done
+    );
+}
+
+// Add formant filter function
+py::array_t<float> formantFilterNumPy(py::array_t<float> samples, float peak, float mix = 0.5f, float spread = 0.0f) {
+    py::buffer_info buf = samples.request();
+
+    if (buf.ndim != 1) {
+        throw std::invalid_argument("samples must be a 1D array");
+    }
+    if (buf.size == 0) {
+        throw std::invalid_argument("samples array cannot be empty");
+    }
+    if (buf.format != py::format_descriptor<float>::format()) {
+        throw std::invalid_argument("samples must be float32 array");
+    }
+
+    float* input_ptr = static_cast<float*>(buf.ptr);
+    int sample_length = static_cast<int>(buf.size);
+
+    // Validate parameters
+    if (peak < 0.0f || peak > 1.0f) {
+        throw std::invalid_argument("peak must be between 0.0 and 1.0");
+    }
+    if (mix < 0.0f || mix > 1.0f) {
+        throw std::invalid_argument("mix must be between 0.0 and 1.0");
+    }
+    if (spread < 0.0f || spread > 1.0f) {
+        throw std::invalid_argument("spread must be between 0.0 and 1.0");
+    }
+
+    std::unique_ptr<float[]> filtered_ptr = Resonix::formant_filter(input_ptr, sample_length, peak, mix, spread);
+
+    if (!filtered_ptr) {
+        throw std::runtime_error("Failed to apply formant filter");
+    }
+
+    float* raw_ptr = filtered_ptr.release();
+
     auto cleanup = [](void *f) {
         if (f) {
             float *data = static_cast<float*>(f);
@@ -251,5 +303,44 @@ PYBIND11_MODULE(resonix, m) {
             >>> import resonix
             >>> samples = resonix.generate_samples(resonix.Shape.SINE, 1, 440.0)
             >>> filtered = resonix.highpass_filter(samples, 200.0)
+          )pbdoc");
+
+    m.def("formant_filter", &formantFilterNumPy,
+          py::arg("samples"),
+          py::arg("peak"),
+          py::arg("mix") = 0.5f,
+          py::arg("spread") = 0.0f,
+          R"pbdoc(
+            Apply a formant filter to audio samples.
+
+            Applies a series of resonant bandpass filters to simulate vowel formants,
+            creating vocal-like or vowel-like timbres from the input audio.
+
+            Parameters
+            ----------
+            samples : numpy.ndarray
+                1D array of float32 audio samples to filter
+            peak : float
+                Determines which vowel formant to emphasize (0.0-1.0):
+                0.0-0.2: "ah" as in "father"
+                0.2-0.4: "eh" as in "bed"
+                0.4-0.6: "ee" as in "see"
+                0.6-0.8: "oh" as in "go"
+                0.8-1.0: "oo" as in "boot"
+            mix : float, optional
+                Dry/wet mix (0.0 = dry, 1.0 = wet, default: 0.5)
+            spread : float, optional
+                Spread of formant frequencies (0.0 = normal, 1.0 = wide, default: 0.0)
+
+            Returns
+            -------
+            numpy.ndarray
+                Array of filtered float32 samples with same length as input
+
+            Examples
+            --------
+            >>> import resonix
+            >>> samples = resonix.generate_samples(resonix.Shape.SINE, 1, 440.0)
+            >>> filtered = resonix.formant_filter(samples, 0.4, 0.8, 0.2)
           )pbdoc");
 }

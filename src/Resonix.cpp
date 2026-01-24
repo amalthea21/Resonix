@@ -38,4 +38,8 @@ namespace Resonix {
     std::unique_ptr<float[]> highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance) {
         return Filter::apply_highpass_filter(samples, sample_length, cutoff_hz, resonance);
     }
+
+    std::unique_ptr<float[]> formant_filter(const float* samples, int sample_length, float peak, float mix, float spread) {
+        return Filter::apply_formant_filter(samples, sample_length, peak, mix, spread);
+    }
 }
