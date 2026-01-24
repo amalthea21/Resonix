@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Resonix Clean Build Script
-# This script removes all build artifacts and creates a fresh Python build
-
 set -e
 
-# Get the project root directory (parent of scripts/)
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
