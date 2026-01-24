@@ -1,6 +1,5 @@
 from setuptools import setup, Extension
-import subprocess
-import sys
+import os
 
 def get_pybind_include():
     try:
@@ -29,7 +28,7 @@ ext_modules = [
             'include',
         ],
         language='c++',
-        extra_compile_args=['-std=c++17'],  # Changed from c++26
+        extra_compile_args=['-std=c++17'],
     ),
 ]
 
@@ -42,4 +41,9 @@ setup(
     install_requires=['pybind11>=2.6.0', 'numpy'],
     python_requires='>=3.7',
     zip_safe=False,
+    options={
+        'build': {
+            'build_lib': '.'  # Build in project root, not src/
+        }
+    }
 )
