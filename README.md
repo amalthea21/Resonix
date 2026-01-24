@@ -209,3 +209,12 @@ print(f"Highpass preserves {100*np.sqrt(np.mean(highpass_filtered**2))/np.sqrt(n
 **Output**:
 
 <img width="1410" height="1617" alt="grafik" src="https://github.com/user-attachments/assets/757133f5-c19b-42d0-950a-ef6eba4609ac" />
+
+### Memory Test
+
+[Code](tests/memory_analysis.py)
+
+**Output**:
+
+<img width="2244" height="1526" alt="memory_analysis" src="https://github.com/user-attachments/assets/590e3398-f869-4904-9926-1926851fbbc5" />
+
