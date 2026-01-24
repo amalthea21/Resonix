@@ -42,7 +42,6 @@ def compute_fft(signal):
     fft_result = np.fft.fft(signal)
     freqs = np.fft.fftfreq(len(signal), 1/sample_rate)
     magnitude = np.abs(fft_result)
-    # Only take positive frequencies
     positive_freqs = freqs[:len(freqs)//2]
     positive_magnitude = magnitude[:len(magnitude)//2]
     return positive_freqs, positive_magnitude
@@ -63,7 +62,7 @@ axs[1, 1].legend()
 axs[1, 1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('filter_comparison.png', dpi=150, bbox_inches='tight')
+plt.savefig('output/filter_comparison.png', dpi=150, bbox_inches='tight')
 
 print("\n=== Filter Statistics ===")
 print(f"Original Signal RMS: {np.sqrt(np.mean(mixed_signal**2)):.4f}")

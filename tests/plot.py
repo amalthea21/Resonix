@@ -2,7 +2,7 @@ import resonix
 import matplotlib.pyplot as plt
 import numpy as np
 
-samples = resonix.generate_samples(resonix.Shape.HANN, 10, 440.0)
+samples = resonix.generate_samples(resonix.Shape.PHASED_HANN, 10, 440.0)
 
 time = np.linspace(0, 1, len(samples))
 
@@ -23,4 +23,4 @@ plt.ylabel('Amplitude')
 plt.grid(True)
 
 plt.tight_layout()
-plt.savefig('plot.png', dpi=150, bbox_inches='tight')
+plt.savefig('output/plot.png', dpi=150, bbox_inches='tight')

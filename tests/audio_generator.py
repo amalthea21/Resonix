@@ -6,5 +6,5 @@ samples = resonix.generate_samples(resonix.Shape.PHASED_HANN, 5, 164.0)
 print(f"Generated {len(samples)} samples")
 print(f"Sample rate: {resonix.SAMPLE_RATE}")
 
-sf.write('output.wav', samples, resonix.SAMPLE_RATE)
+sf.write('output/audio.wav', samples, resonix.SAMPLE_RATE)
 print(f"Audio saved as 'output.wav'")
