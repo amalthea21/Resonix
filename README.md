@@ -93,7 +93,6 @@ make
 
 ### [Memory Test](tests/memory_analysis.py)
 
-<img width="2244" height="1526" alt="memory_analysis" src="https://github.com/user-attachments/assets/590e3398-f869-4904-9926-1926851fbbc5" />
+<img width="2338" height="1609" alt="grafik" src="https://github.com/user-attachments/assets/8c1da8b1-3614-44bf-ae1c-37930dca88f0" />
 
 <br><br>
-
