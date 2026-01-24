@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "Generator.hpp"
 #include "Filter.hpp"
 

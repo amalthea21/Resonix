@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 /**
  * @namespace Generator
  * @brief Low-level waveform generation functions

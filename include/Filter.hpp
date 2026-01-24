@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "Math.hpp"
 #include "Resonix.hpp"
 
