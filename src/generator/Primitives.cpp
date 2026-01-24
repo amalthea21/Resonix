@@ -4,7 +4,7 @@
 
 namespace Generator {
     std::unique_ptr<float[]> Sine(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
@@ -17,7 +17,7 @@ namespace Generator {
     }
 
     std::unique_ptr<float[]> Square(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
@@ -30,7 +30,7 @@ namespace Generator {
     }
 
     std::unique_ptr<float[]> Triangle(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
@@ -43,7 +43,7 @@ namespace Generator {
     }
 
     std::unique_ptr<float[]> Sawtooth(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {

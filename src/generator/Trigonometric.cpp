@@ -4,7 +4,7 @@
 
 namespace Generator {
     std::unique_ptr<float[]> Cosine(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
@@ -16,8 +16,8 @@ namespace Generator {
         return samples;
     }
 
-    std::unique_ptr<float[]> Tangent(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+    std::unique_ptr<float[]> Tangenstd::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);t(int sample_length, float frequency, const float phaseIncrement) {
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
@@ -30,7 +30,7 @@ namespace Generator {
     }
 
     std::unique_ptr<float[]> Cotangent(int sample_length, float frequency, const float phaseIncrement) {
-        std::unique_ptr<float[]> samples = new float[sample_length * Resonix::SAMPLE_RATE];
+        std::unique_ptr<float[]> samples = std::make_unique<float[]>(sample_length * Resonix::SAMPLE_RATE);
         float t, phase;
 
         for (int i = 0; i < sample_length * Resonix::SAMPLE_RATE; i++) {
