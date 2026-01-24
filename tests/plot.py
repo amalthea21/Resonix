@@ -23,4 +23,4 @@ plt.ylabel('Amplitude')
 plt.grid(True)
 
 plt.tight_layout()
-plt.show()
+plt.savefig('plot.png', dpi=150, bbox_inches='tight')

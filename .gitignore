@@ -7,3 +7,5 @@ __pycache__/
 *.pyc
 *.pyo
 cmake-build-*/
+/tests/filter_comparison.png
+/tests/plot.png

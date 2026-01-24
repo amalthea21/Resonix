@@ -64,8 +64,6 @@ axs[1, 1].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig('filter_comparison.png', dpi=150, bbox_inches='tight')
-print("✓ Filter comparison plot saved as 'filter_comparison.png'")
-plt.show()
 
 print("\n=== Filter Statistics ===")
 print(f"Original Signal RMS: {np.sqrt(np.mean(mixed_signal**2)):.4f}")
