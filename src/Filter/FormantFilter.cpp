@@ -1,4 +1,4 @@
-#include "Filter.h"
+#include "Filter.hpp"
 
 namespace Filter {
     std::unique_ptr<float[]> apply_formant_filter(const float* samples, int sample_length, float peak, float mix, float spread) {
