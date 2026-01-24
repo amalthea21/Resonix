@@ -6,20 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(resonix STATIC
-        src/Resonix.cpp
-        src/generator/Trigonometric.cpp
-        src/generator/Primitives.cpp
-        src/generator/Hann.cpp
-        include/Math.hpp
-        src/math/Trigonometry.cpp
-        src/math/Utils.cpp
-        src/math/NaN.cpp
-        src/Filter/LowpassFilter.cpp
-        src/Filter/HighpassFilter.cpp
+        ../src/Resonix.cpp
+        ../src/generator/Trigonometric.cpp
+        ../src/generator/Primitives.cpp
+        ../src/generator/Hann.cpp
+        ../include/Math.hpp
+        ../src/math/Trigonometry.cpp
+        ../src/math/Utils.cpp
+        ../src/math/NaN.cpp
+        ../src/Filter/LowpassFilter.cpp
+        ../src/Filter/HighpassFilter.cpp
 )
 
 target_include_directories(resonix PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ../include
 )
 
 target_compile_options(resonix PRIVATE
@@ -43,7 +43,7 @@ if(BUILD_PYTHON_BINDINGS)
     find_package(pybind11 CONFIG)
 
     if(pybind11_FOUND)
-        pybind11_add_module(resonix_python python/bindings.cpp)
+        pybind11_add_module(resonix_python ../python/bindings.cpp)
 
         target_link_libraries(resonix_python PRIVATE resonix)
 
