@@ -1,7 +1,15 @@
 # 🔊 **Resonix**
-<sup> Python Sample-Generation Library <sup>
+
+Resonix is a lightweight, high-performance audio sample generation library designed for flexibility and ease of use across C++ and Python environments. It provides tools for generating, processing, and analyzing audio samples, with support for custom build configurations, multiple sample rates, and example workflows to quickly get you started. Whether you’re building audio tools, experimenting with signal processing, or integrating sound features into your applications, Resonix gives you a solid foundation to work from.
 
 <br><br>
+
+## 🚀 **Features**
+
+- Audio sample generation with configurable parameters
+- C++ core with python bindings (you can also use it as C++ Library!)
+- Custom sample rate
+- Minimal dependencies
 
 ## 🛠️ **Building**
 
