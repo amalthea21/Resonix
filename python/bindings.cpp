@@ -24,10 +24,14 @@ py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length,
 
     float* raw_ptr = samples_ptr.release();
 
-    py::capsule free_when_done(raw_ptr, [](void *f) {
-        float *data = reinterpret_cast<float *>(f);
-        delete[] data;
-    });
+    auto cleanup = [](void *f) {
+        if (f) {
+            float *data = static_cast<float*>(f);
+            delete[] data;
+        }
+    };
+
+    py::capsule free_when_done(raw_ptr, cleanup);
 
     return py::array_t<float>(
         {static_cast<py::ssize_t>(total_samples)},
@@ -68,10 +72,14 @@ py::array_t<float> lowpassFilterNumPy(py::array_t<float> samples, float cutoff_h
 
     float* raw_ptr = filtered_ptr.release();
 
-    py::capsule free_when_done(raw_ptr, [](void *f) {
-        float *data = reinterpret_cast<float *>(f);
-        delete[] data;
-    });
+    auto cleanup = [](void *f) {
+        if (f) {
+            float *data = static_cast<float*>(f);
+            delete[] data;
+        }
+    };
+
+    py::capsule free_when_done(raw_ptr, cleanup);
 
     return py::array_t<float>(
         {static_cast<py::ssize_t>(sample_length)},
@@ -112,10 +120,15 @@ py::array_t<float> highpassFilterNumPy(py::array_t<float> samples, float cutoff_
 
     float* raw_ptr = filtered_ptr.release();
 
-    py::capsule free_when_done(raw_ptr, [](void *f) {
-        float *data = reinterpret_cast<float *>(f);
-        delete[] data;
-    });
+    // Create capsule with explicit cleanup and null check
+    auto cleanup = [](void *f) {
+        if (f) {
+            float *data = static_cast<float*>(f);
+            delete[] data;
+        }
+    };
+
+    py::capsule free_when_done(raw_ptr, cleanup);
 
     return py::array_t<float>(
         {static_cast<py::ssize_t>(sample_length)},

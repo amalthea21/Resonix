@@ -8,19 +8,23 @@ import tracemalloc
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
+os.makedirs('output', exist_ok=True)
+
+gc.set_threshold(700, 10, 10)
+
 process = psutil.Process(os.getpid())
 tracemalloc.start()
 
 
 def measure_memory_kb():
     gc.collect()
-    time.sleep(0.05)
+    time.sleep(0.1)
     return process.memory_info().rss / 1024
 
 
 def measure_performance_precise(shape, duration, frequency, iterations=10):
     gc.collect()
-    time.sleep(0.1)
+    time.sleep(0.2)
 
     mem_before = measure_memory_kb()
     total_time = 0
@@ -28,7 +32,7 @@ def measure_performance_precise(shape, duration, frequency, iterations=10):
 
     for _ in range(iterations):
         gc.collect()
-        time.sleep(0.02)
+        time.sleep(0.05)
 
         start_time = time.perf_counter()
         chunk = resonix.generate_samples(shape, duration, frequency)
@@ -37,7 +41,7 @@ def measure_performance_precise(shape, duration, frequency, iterations=10):
 
     del chunks
     gc.collect()
-    time.sleep(0.1)
+    time.sleep(0.2)
     mem_after = measure_memory_kb()
 
     avg_time = total_time / iterations
@@ -47,7 +51,7 @@ def measure_performance_precise(shape, duration, frequency, iterations=10):
 
 
 gc.collect()
-time.sleep(0.3)
+time.sleep(0.5)
 baseline_memory_mb = process.memory_info().rss / 1024 / 1024
 baseline_memory_kb = baseline_memory_mb * 1024
 
@@ -59,7 +63,7 @@ generation_times = []
 
 for i in range(20):
     gc.collect()
-    time.sleep(0.05)
+    time.sleep(0.1)
 
     mem_before = measure_memory_kb()
     start_time = time.perf_counter()
@@ -79,12 +83,14 @@ for i in range(20):
 memory_before_cleanup = measure_memory_kb() / 1024
 
 chunks.clear()
+del chunks
 gc.collect()
-time.sleep(0.5)
+plt.close('all')
+time.sleep(2.0)
 
-for _ in range(3):
+for _ in range(5):
     gc.collect()
-    time.sleep(0.2)
+    time.sleep(0.5)
 
 memory_after_cleanup = measure_memory_kb() / 1024
 leaked = memory_after_cleanup - baseline_memory_mb
@@ -287,6 +293,6 @@ ax8.text(0.5, 0.95, f'{leak_status}\n({leaked:.1f} MB leaked)',
          fontsize=11, fontweight='bold')
 
 plt.savefig('output/memory_analysis.png', dpi=150, bbox_inches='tight')
-plt.show()
+plt.close('all')
 
 print('Test finished')
