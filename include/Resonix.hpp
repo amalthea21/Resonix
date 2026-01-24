@@ -46,19 +46,19 @@ namespace Resonix {
      *
      * @param shape The waveform shape to generate (e.g., SINE, SQUARE, TRIANGLE)
      * @param sample_length Number of samples in seconds to generate in the output buffer
-     * @param frequency Frequency ovoid low_frequency_filter(float* &samples, int sample_length, float cutoff_point);f the waveform in Hz (e.g., 440.0 for A4)
-     * @return float* Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
+     * @param frequency Frequency ovoid low_frequency_filter(std::unique_ptr<float[]> &samples, int sample_length, float cutoff_point);f the waveform in Hz (e.g., 440.0 for A4)
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails or if parameters are invalid
      *
      * @example
      * // Generate 1 second of 440Hz sine wave at 44100 Hz sample rate
-     * float* samples = Resonix::generateSamples(Resonix::SINE, 44100, 440.0f);
+     * std::unique_ptr<float[]> samples = Resonix::generateSamples(Resonix::SINE, 44100, 440.0f);
      * // Use samples...
      * delete[] samples;
      */
-    float* generateSamples(Shape shape, int sample_length, float frequency);
+    std::unique_ptr<float[]> generateSamples(Shape shape, int sample_length, float frequency);
 
     /**
      * @brief Applies a lowpass filter to audio samples using a biquad filter design
@@ -72,7 +72,7 @@ namespace Resonix {
      * @param sample_length Number of samples in the input/output buffer
      * @param cutoff_hz Cutoff frequency in Hz (e.g., 1000.0 for 1kHz lowpass)
      * @param resonance Resonance/Q factor of the filter (default: 0.707f for Butterworth response)
-     * @return float* Pointer to dynamically allocated array of filtered samples
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of filtered samples
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails, input is invalid, or parameters are out of range
@@ -81,17 +81,17 @@ namespace Resonix {
      *
      * @example
      * // Filter audio with 1kHz cutoff and moderate resonance
-     * float* filtered = Resonix::lowpass_filter(samples, 44100, 1000.0f, 0.707f);
+     * std::unique_ptr<float[]> filtered = Resonix::lowpass_filter(samples, 44100, 1000.0f, 0.707f);
      * // Use filtered audio...
      * delete[] filtered;
      *
      * @example
      * // Filter with stronger resonance effect (emphasizes cutoff frequency)
-     * float* resonant = Resonix::lowpass_filter(samples, 44100, 500.0f, 2.5f);
+     * std::unique_ptr<float[]> resonant = Resonix::lowpass_filter(samples, 44100, 500.0f, 2.5f);
      * // Has a noticeable "peak" at 500Hz
      * delete[] resonant;
      */
-    float* lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
+    std::unique_ptr<float[]> lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
 
     /**
      * @brief Applies a highpass filter to audio samples using a biquad filter design
@@ -104,7 +104,7 @@ namespace Resonix {
      * @param sample_length Number of samples in the input/output buffer
      * @param cutoff_hz Cutoff frequency in Hz (e.g., 200.0 for 200Hz highpass)
      * @param resonance Resonance/Q factor of the filter (default: 0.707f for Butterworth response)
-     * @return float* Pointer to dynamically allocated array of filtered samples
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of filtered samples
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails, input is invalid, or parameters are out of range
@@ -113,13 +113,13 @@ namespace Resonix {
      *
      * @example
      * // Remove low-frequency rumble below 80Hz
-     * float* filtered = Resonix::highpass_filter(samples, 44100, 80.0f, 0.707f);
+     * std::unique_ptr<float[]> filtered = Resonix::highpass_filter(samples, 44100, 80.0f, 0.707f);
      * delete[] filtered;
      *
      * @example
      * // Create telephone effect (remove bass)
-     * float* phone = Resonix::highpass_filter(samples, 44100, 300.0f, 0.707f);
+     * std::unique_ptr<float[]> phone = Resonix::highpass_filter(samples, 44100, 300.0f, 0.707f);
      * delete[] phone;
      */
-    float* highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
+    std::unique_ptr<float[]> highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance = 0.707f);
 }

@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <stdexcept>
+#include <memory>
 #include "Resonix.hpp"
 
 namespace py = pybind11;
@@ -13,7 +14,7 @@ py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length,
         throw std::invalid_argument("frequency must be positive");
     }
 
-    float* samples_ptr = Resonix::generateSamples(shape, sample_length, frequency);
+    std::unique_ptr<float[]> samples_ptr = Resonix::generateSamples(shape, sample_length, frequency);
 
     if (!samples_ptr) {
         throw std::runtime_error("Failed to generate samples");
@@ -21,7 +22,9 @@ py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length,
 
     size_t total_samples = static_cast<size_t>(sample_length) * Resonix::SAMPLE_RATE;
 
-    py::capsule free_when_done(samples_ptr, [](void *f) {
+    float* raw_ptr = samples_ptr.release();
+
+    py::capsule free_when_done(raw_ptr, [](void *f) {
         float *data = reinterpret_cast<float *>(f);
         delete[] data;
     });
@@ -29,7 +32,7 @@ py::array_t<float> generateSamplesNumPy(Resonix::Shape shape, int sample_length,
     return py::array_t<float>(
         {static_cast<py::ssize_t>(total_samples)},
         {sizeof(float)},
-        samples_ptr,
+        raw_ptr,
         free_when_done
     );
 }
@@ -57,13 +60,15 @@ py::array_t<float> lowpassFilterNumPy(py::array_t<float> samples, float cutoff_h
         throw std::invalid_argument("resonance must be between 0.5 and 10.0");
     }
 
-    float* filtered_ptr = Resonix::lowpass_filter(input_ptr, sample_length, cutoff_hz, resonance);
+    std::unique_ptr<float[]> filtered_ptr = Resonix::lowpass_filter(input_ptr, sample_length, cutoff_hz, resonance);
 
     if (!filtered_ptr) {
         throw std::runtime_error("Failed to apply lowpass filter");
     }
 
-    py::capsule free_when_done(filtered_ptr, [](void *f) {
+    float* raw_ptr = filtered_ptr.release();
+
+    py::capsule free_when_done(raw_ptr, [](void *f) {
         float *data = reinterpret_cast<float *>(f);
         delete[] data;
     });
@@ -71,7 +76,7 @@ py::array_t<float> lowpassFilterNumPy(py::array_t<float> samples, float cutoff_h
     return py::array_t<float>(
         {static_cast<py::ssize_t>(sample_length)},
         {sizeof(float)},
-        filtered_ptr,
+        raw_ptr,
         free_when_done
     );
 }
@@ -99,13 +104,15 @@ py::array_t<float> highpassFilterNumPy(py::array_t<float> samples, float cutoff_
         throw std::invalid_argument("resonance must be between 0.5 and 10.0");
     }
 
-    float* filtered_ptr = Resonix::highpass_filter(input_ptr, sample_length, cutoff_hz, resonance);
+    std::unique_ptr<float[]> filtered_ptr = Resonix::highpass_filter(input_ptr, sample_length, cutoff_hz, resonance);
 
     if (!filtered_ptr) {
         throw std::runtime_error("Failed to apply highpass filter");
     }
 
-    py::capsule free_when_done(filtered_ptr, [](void *f) {
+    float* raw_ptr = filtered_ptr.release();
+
+    py::capsule free_when_done(raw_ptr, [](void *f) {
         float *data = reinterpret_cast<float *>(f);
         delete[] data;
     });
@@ -113,7 +120,7 @@ py::array_t<float> highpassFilterNumPy(py::array_t<float> samples, float cutoff_
     return py::array_t<float>(
         {static_cast<py::ssize_t>(sample_length)},
         {sizeof(float)},
-        filtered_ptr,
+        raw_ptr,
         free_when_done
     );
 }

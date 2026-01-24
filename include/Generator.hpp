@@ -21,14 +21,14 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails
      *
      * @see Cosine(), Square(), Triangle()
      */
-    float* Sine(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Sine(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a square wave
@@ -39,14 +39,14 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples (values: -1.0 or 1.0)
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples (values: -1.0 or 1.0)
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails
      *
      * @see Triangle(), Sawtooth()
      */
-    float* Square(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Square(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a triangle wave
@@ -57,14 +57,14 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails
      *
      * @see Square(), Sawtooth()
      */
-    float* Triangle(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Triangle(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a sawtooth wave
@@ -75,14 +75,14 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails
      *
      * @see Triangle(), Square()
      */
-    float* Sawtooth(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Sawtooth(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a cosine wave
@@ -93,14 +93,14 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [-1.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Returns nullptr if allocation fails
      *
      * @see Sine(), Tangent()
      */
-    float* Cosine(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Cosine(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a tangent wave
@@ -111,7 +111,7 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Contains discontinuities; output is not band-limited
@@ -119,7 +119,7 @@ namespace Generator {
      *
      * @see Cotangent(), Sine()
      */
-    float* Tangent(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Tangent(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a cotangent wave
@@ -130,7 +130,7 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the waveform in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @warning Contains discontinuities; output is not band-limited
@@ -138,7 +138,7 @@ namespace Generator {
      *
      * @see Tangent(), Cosine()
      */
-    float* Cotangent(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Cotangent(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a Hann window function
@@ -150,7 +150,7 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the window cycle in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [0.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [0.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @note Output range is [0.0, 1.0] unlike other generators
@@ -158,7 +158,7 @@ namespace Generator {
      *
      * @see Phased_Hann()
      */
-    float* Hann(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Hann(int sample_length, float frequency, const float phaseIncrement);
 
     /**
      * @brief Generates a phase-shifted Hann window function
@@ -170,7 +170,7 @@ namespace Generator {
      * @param sample_length Number of samples to generate
      * @param frequency Frequency of the window cycle in Hz
      * @param phaseIncrement Phase increment per sample (2π * frequency / sample_rate)
-     * @return float* Pointer to dynamically allocated array of samples in range [0.0, 1.0]
+     * @return std::unique_ptr<float[]> Pointer to dynamically allocated array of samples in range [0.0, 1.0]
      *
      * @note Caller is responsible for freeing the returned array with delete[]
      * @note Output range is [0.0, 1.0] unlike other generators
@@ -178,5 +178,5 @@ namespace Generator {
      *
      * @see Hann()
      */
-    float* Phased_Hann(int sample_length, float frequency, const float phaseIncrement);
+    std::unique_ptr<float[]> Phased_Hann(int sample_length, float frequency, const float phaseIncrement);
 }
