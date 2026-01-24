@@ -24,3 +24,5 @@ plt.grid(True)
 
 plt.tight_layout()
 plt.savefig('output/plot.png', dpi=150, bbox_inches='tight')
+
+print('Test finished')

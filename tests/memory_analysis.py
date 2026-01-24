@@ -281,3 +281,5 @@ ax8.text(0.5, 0.95, f'{leak_status}\n({leaked:.1f} MB leaked)',
 
 plt.savefig('output/memory_analysis.png', dpi=150, bbox_inches='tight')
 plt.show()
+
+print('Test finished')
