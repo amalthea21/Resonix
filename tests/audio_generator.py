@@ -11,7 +11,6 @@ vowel_ee = resonix.formant_filter(original, peak=0.5, mix=1.0, spread=0.0)
 vowel_oh = resonix.formant_filter(original, peak=0.7, mix=1.0, spread=0.0)
 vowel_oo = resonix.formant_filter(original, peak=0.9, mix=1.0, spread=0.0)
 
-# Save all variations
 sf.write('output/original.wav', original, resonix.SAMPLE_RATE)
 sf.write('output/vowel_ah.wav', vowel_ah, resonix.SAMPLE_RATE)
 sf.write('output/vowel_eh.wav', vowel_eh, resonix.SAMPLE_RATE)

@@ -6,22 +6,42 @@
 
 namespace Filter {
     struct BiquadFilter {
-        float b0, b1, b2;
-        float a1, a2;
-        float x1, x2;
-        float y1, y2;
+        float b0, b1, b2, a1, a2;
+        float x1, x2, y1, y2;
 
-        BiquadFilter() : x1(0), x2(0), y1(0), y2(0) {}
+        BiquadFilter() {
+            reset();
+        }
 
-        float process(float sample) {
-            float y = b0 * sample + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+        void reset() {
+            b0 = 1.0f;
+            b1 = 0.0f;
+            b2 = 0.0f;
+            a1 = 0.0f;
+            a2 = 0.0f;
+            x1 = 0.0f;
+            x2 = 0.0f;
+            y1 = 0.0f;
+            y2 = 0.0f;
+        }
+
+        void setCoefficients(float b0_, float b1_, float b2_, float a1_, float a2_) {
+            b0 = b0_;
+            b1 = b1_;
+            b2 = b2_;
+            a1 = a1_;
+            a2 = a2_;
+        }
+
+        float process(float input) {
+            float output = b0 * input + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
 
             x2 = x1;
-            x1 = sample;
+            x1 = input;
             y2 = y1;
-            y1 = y;
+            y1 = output;
 
-            return y;
+            return output;
         }
     };
 
