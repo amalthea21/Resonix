@@ -45,6 +45,8 @@ namespace Filter {
         }
     };
 
+	std::unique_ptr<float[]> apply_bandpass_filter(const float* samples, int sample_length, float center_hz, float bandwidth_hz, float resonance);
+
     std::unique_ptr<float[]> apply_lowpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance);
 
     std::unique_ptr<float[]> apply_highpass_filter(const float* samples, int sample_length, float cutoff_hz, float resonance);

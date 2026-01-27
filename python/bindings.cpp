@@ -137,7 +137,57 @@ py::array_t<float> highpassFilterNumPy(py::array_t<float> samples, float cutoff_
     );
 }
 
-// Add formant filter function
+py::array_t<float> bandpassFilterNumPy(py::array_t<float> samples, float center_hz, float bandwidth_hz, float resonance = 0.707f) {
+    py::buffer_info buf = samples.request();
+
+    if (buf.ndim != 1) {
+        throw std::invalid_argument("samples must be a 1D array");
+    }
+    if (buf.size == 0) {
+        throw std::invalid_argument("samples array cannot be empty");
+    }
+    if (buf.format != py::format_descriptor<float>::format()) {
+        throw std::invalid_argument("samples must be float32 array");
+    }
+
+    float* input_ptr = static_cast<float*>(buf.ptr);
+    int sample_length = static_cast<int>(buf.size);
+
+    if (center_hz <= 0.0f) {
+        throw std::invalid_argument("center_hz must be positive");
+    }
+    if (bandwidth_hz <= 0.0f) {
+        throw std::invalid_argument("bandwidth_hz must be positive");
+    }
+    if (resonance < 0.5f || resonance > 10.0f) {
+        throw std::invalid_argument("resonance must be between 0.5 and 10.0");
+    }
+
+    std::unique_ptr<float[]> filtered_ptr = Resonix::bandpass_filter(input_ptr, sample_length, center_hz, bandwidth_hz, resonance);
+
+    if (!filtered_ptr) {
+        throw std::runtime_error("Failed to apply bandpass filter");
+    }
+
+    float* raw_ptr = filtered_ptr.release();
+
+    auto cleanup = [](void *f) {
+        if (f) {
+            float *data = static_cast<float*>(f);
+            delete[] data;
+        }
+    };
+
+    py::capsule free_when_done(raw_ptr, cleanup);
+
+    return py::array_t<float>(
+        {static_cast<py::ssize_t>(sample_length)},
+        {sizeof(float)},
+        raw_ptr,
+        free_when_done
+    );
+}
+
 py::array_t<float> formantFilterNumPy(py::array_t<float> samples, float peak, float mix = 0.5f, float spread = 0.0f) {
     py::buffer_info buf = samples.request();
 
@@ -305,6 +355,57 @@ PYBIND11_MODULE(resonix, m) {
             >>> filtered = resonix.highpass_filter(samples, 200.0)
           )pbdoc");
 
+    m.def("bandpass_filter", &bandpassFilterNumPy,
+          py::arg("samples"),
+          py::arg("center_hz"),
+          py::arg("bandwidth_hz"),
+          py::arg("resonance") = 0.707f,
+          R"pbdoc(
+            Apply a bandpass filter to audio samples.
+
+            Filters the input audio samples to isolate a specific frequency band by removing
+            frequencies both above and below the specified range. Uses a second-order resonant
+            bandpass filter implementation.
+
+            Parameters
+            ----------
+            samples : numpy.ndarray
+                1D array of float32 audio samples to filter
+            center_hz : float
+                Center frequency of the passband in Hz (e.g., 1000.0 for 1kHz center)
+            bandwidth_hz : float
+                Width of the passband in Hz (e.g., 200.0 for ±100Hz around center)
+            resonance : float, optional
+                Resonance/Q multiplier of the filter (default: 0.707 for moderate response)
+                Higher values create sharper, more selective filtering.
+                Should be between 0.5 and 10.0 for stability.
+
+            Returns
+            -------
+            numpy.ndarray
+                Array of filtered float32 samples with same length as input
+
+            Notes
+            -----
+            The filter passes frequencies approximately from (center_hz - bandwidth_hz/2)
+            to (center_hz + bandwidth_hz/2). Actual Q factor is calculated as:
+            Q = (center_hz / bandwidth_hz) * resonance
+
+            Examples
+            --------
+            >>> import resonix
+            >>> samples = resonix.generate_samples(resonix.Shape.SINE, 1, 440.0)
+            >>> # Isolate 750Hz - 1250Hz range
+            >>> filtered = resonix.bandpass_filter(samples, 1000.0, 500.0)
+
+            >>> # Create fricative 's' sound (4kHz - 8kHz)
+            >>> noise = np.random.randn(44100).astype(np.float32)
+            >>> fricative = resonix.bandpass_filter(noise, 6000.0, 4000.0, 0.5)
+
+            >>> # Telephone effect (300Hz - 3400Hz)
+            >>> phone = resonix.bandpass_filter(voice, 1850.0, 3100.0)
+          )pbdoc");
+
     m.def("formant_filter", &formantFilterNumPy,
           py::arg("samples"),
           py::arg("peak"),
@@ -340,7 +441,11 @@ PYBIND11_MODULE(resonix, m) {
             Examples
             --------
             >>> import resonix
-            >>> samples = resonix.generate_samples(resonix.Shape.SINE, 1, 440.0)
-            >>> filtered = resonix.formant_filter(samples, 0.4, 0.8, 0.2)
+            >>> samples = resonix.generate_samples(resonix.Shape.SAWTOOTH, 1, 110.0)
+            >>> # Create "ee" vowel sound
+            >>> vowel_ee = resonix.formant_filter(samples, 0.5, 1.0, 0.0)
+
+            >>> # Subtle vocal character with 50% mix
+            >>> subtle = resonix.formant_filter(samples, 0.3, 0.5, 0.0)
           )pbdoc");
 }

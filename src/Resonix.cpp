@@ -42,4 +42,8 @@ namespace Resonix {
     std::unique_ptr<float[]> formant_filter(const float* samples, int sample_length, float peak, float mix, float spread) {
         return Filter::apply_formant_filter(samples, sample_length, peak, mix, spread);
     }
+
+	std::unique_ptr<float[]> bandpass_filter(const float* samples, int sample_length, float center_hz, float bandwidth_hz, float resonance) {
+		return Filter::apply_bandpass_filter(samples, sample_length, center_hz, bandwidth_hz, resonance);
+	}
 }

@@ -115,9 +115,19 @@ def generate_plosive(char, duration_seconds, voiced=False):
     return np.concatenate([silence, burst, padding])
 
 
+def crossfade(sound1, sound2, fade_samples=100):
+    if len(sound1) < fade_samples or len(sound2) < fade_samples:
+        return np.concatenate([sound1, sound2])
+
+    fade_out = np.linspace(1, 0, fade_samples)
+    fade_in = np.linspace(0, 1, fade_samples)
+
+    overlapped = sound1[-fade_samples:] * fade_out + sound2[:fade_samples] * fade_in
+
+    return np.concatenate([sound1[:-fade_samples], overlapped, sound2[fade_samples:]])
+
 def main():
     text = input("Text: ").lower()
-
     samples_list = []
 
     vowels = 'aeiou'
@@ -128,37 +138,61 @@ def main():
     voiced_plosives = 'bdg'
 
     i = 0
+    previous_sound = None
+
     while i < len(text):
         char = text[i]
+        current_sound = None
+
+        if char == 'c':
+            if i + 1 < len(text):
+                next_char = text[i + 1]
+                if next_char in 'eiy':
+                    char = 's'  # soft C
+                else:
+                    char = 'k'  # hard C
+            else:
+                char = 'k'
 
         if char == ' ':
-            samples_list.append(np.zeros(int(0.1 * SAMPLE_RATE), dtype=np.float32))
+            current_sound = np.zeros(int(0.1 * SAMPLE_RATE), dtype=np.float32)
 
         elif char in vowels:
-            samples_list.append(generate_vowel(char, DURATION_PER_CHAR))
+            current_sound = generate_vowel(char, DURATION_PER_CHAR)
 
         elif char in nasals:
-            samples_list.append(generate_nasal(char, DURATION_PER_CHAR))
+            current_sound = generate_nasal(char, DURATION_PER_CHAR)
 
         elif char in voiceless_fricatives:
             if char == 't' and i + 1 < len(text) and text[i + 1] == 'h':
-                samples_list.append(generate_fricative('th', DURATION_PER_CHAR, voiced=False))
+                current_sound = generate_fricative('th', DURATION_PER_CHAR, voiced=False)
                 i += 1
             else:
-                samples_list.append(generate_fricative(char, DURATION_PER_CHAR, voiced=False))
+                current_sound = generate_fricative(char, DURATION_PER_CHAR, voiced=False)
 
         elif char in voiced_fricatives:
-            samples_list.append(generate_fricative(char, DURATION_PER_CHAR, voiced=True))
+            current_sound = generate_fricative(char, DURATION_PER_CHAR, voiced=True)
 
         elif char in voiceless_plosives:
-            samples_list.append(generate_plosive(char, DURATION_PER_CHAR, voiced=False))
+            current_sound = generate_plosive(char, DURATION_PER_CHAR, voiced=False)
 
         elif char in voiced_plosives:
-            samples_list.append(generate_plosive(char, DURATION_PER_CHAR, voiced=True))
+            current_sound = generate_plosive(char, DURATION_PER_CHAR, voiced=True)
 
         else:
-            samples_list.append(np.zeros(int(0.05 * SAMPLE_RATE), dtype=np.float32))
+            current_sound = np.zeros(int(0.05 * SAMPLE_RATE), dtype=np.float32)
 
+        if previous_sound is not None and current_sound is not None:
+            if len(current_sound) > 100 and len(previous_sound) > 100:
+                fade_samples = int(0.015 * SAMPLE_RATE)
+                transitioned = crossfade(previous_sound, current_sound, fade_samples)
+                samples_list[-1] = transitioned
+            else:
+                samples_list.append(current_sound)
+        else:
+            samples_list.append(current_sound)
+
+        previous_sound = current_sound
         i += 1
 
     if samples_list:
