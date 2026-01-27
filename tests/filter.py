@@ -13,7 +13,7 @@ mixed_signal = low_freq * 0.3 + mid_freq * 0.5 + high_freq * 0.3
 
 lowpass_filtered = resonix.lowpass_filter(mixed_signal, 500.0, 0.707)
 highpass_filtered = resonix.highpass_filter(mixed_signal, 500.0, 0.707)
-bandpass_filtered = resonix.bandpass_filter(mixed_signal, 440.0, 300.0, 0.707)
+bandpass_filtered = resonix.bandpass_filter(mixed_signal, 440.0, 50.0, 0.707)
 
 time = np.linspace(0, duration, len(mixed_signal))
 

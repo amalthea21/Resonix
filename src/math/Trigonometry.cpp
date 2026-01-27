@@ -1,76 +1,138 @@
 #include "../include/Math.hpp"
+#include <cmath>
 
 namespace Math {
-    float Sine(float angle) {
-        angle = fmod(angle, 360.0f);
+    float Sine(float degrees) {
+        float angle, radians;
 
-        if (angle < 0.0f) angle += 360.0f;
+        auto reduce_angle = [](float a) -> float {
+            a = std::fmod(a, 360.0f);
+            return a < 0.0f ? a + 360.0f : a;
+        };
 
-        float radians = angle * PI / 180.0f;
+        angle = reduce_angle(degrees);
+        radians = angle * DEG_TO_RAD;
 
-        float term = radians;
-        float sum = radians;
+        auto poly_sin = [](float x) -> float {
+            float x2;
 
-        for (int i = 1; i <= 10; i++) {
-            term *= -radians * radians / ((2 * i) * (2 * i + 1));
-            sum += term;
+            x = std::fmod(x + PI, TWO_PI) - PI;
+
+            constexpr float c7 = 0.9999966f;
+            constexpr float c5 = -0.16664824f;
+            constexpr float c3 = 0.00830629f;
+            constexpr float c1 = -0.00018363f;
+
+            x2 = x * x;
+            return x * (c7 + x2 * (c5 + x2 * (c3 + x2 * c1)));
+        };
+
+        return poly_sin(radians);
+    }
+
+    float Cosine(float degrees) {
+        float angle;
+
+        auto reduce_angle = [](float a) -> float {
+            a = std::fmod(a, 360.0f);
+            return a < 0.0f ? a + 360.0f : a;
+        };
+
+        angle = reduce_angle(degrees);
+        return Sine(angle + 90.0f);
+    }
+
+    float Tangent(float degrees) {
+        float mod180, radians, x, x2, x4, x6, num, den;
+
+        degrees = std::fmod(degrees, 360.0f);
+        if (degrees < 0.0f) degrees += 360.0f;
+
+        mod180 = std::fmod(degrees, 180.0f);
+        if (std::abs(mod180 - 90.0f) < 0.1f) {
+            return getNaN();
         }
 
-        return sum;
-    }
+        radians = degrees * DEG_TO_RAD;
+        radians = std::fmod(radians + PI, TWO_PI) - PI;
 
-    float Cosine(float angle) {
-        angle = fmod(angle, 360.0f);
+        x = radians;
 
-        if (angle < 0.0f) angle += 360.0f;
-
-        float radians = angle * PI / 180.0f;
-
-        float term = 1.0f;
-        float sum = 1.0f;
-
-        for (int i = 1; i <= 10; i++)
-        {
-            term *= -(radians * radians) / ((2 * i - 1) * (2 * i));
-            sum += term;
+        if (x > PI/2) {
+            x -= PI;
+        } else if (x < -PI/2) {
+            x += PI;
         }
 
-        return sum;
+        x2 = x * x;
+        x4 = x2 * x2;
+        x6 = x4 * x2;
+
+        num = x * (-135135.0f + x2 * (17325.0f + x2 * (-378.0f + x2)));
+        den = -135135.0f + x2 * (62370.0f + x2 * (-3150.0f + 28.0f * x2));
+
+        if (std::abs(den) < EPSILON) {
+            return getNaN();
+        }
+
+        return num / den;
     }
 
-    float Tangent(float angle) {
-        float cos_val = Cosine(angle);
+    float Cotangent(float degrees) {
+        float x, x2, x4, numerator, denominator, radians, mod180;
 
-        if (isNaN(cos_val) || abs(cos_val) < 0.001f)
+        degrees = std::fmod(degrees, 360.0f);
+        if (degrees < 0.0f) degrees += 360.0f;
+
+        mod180 = std::fmod(degrees, 180.0f);
+        if (std::abs(mod180) < 0.1f) {
             return getNaN();
+        }
 
-        float result = Sine(angle) / cos_val;
+        radians = degrees * DEG_TO_RAD;
 
-        if (result > 10.0f) return 10.0f;
-        if (result < -10.0f) return -10.0f;
+        if (radians > PI/2) {
+            radians -= PI;
+        } else if (radians < -PI/2) {
+            radians += PI;
+        }
 
-        return result;
-    }
+        x = radians;
 
-    float Cotangent(float angle) {
-        float sin_val = Sine(angle);
-
-        if (isNaN(sin_val) || abs(sin_val) < 0.001f)
+        if (std::abs(x) < 0.001f) {
             return getNaN();
+        }
 
-        float result = Cosine(angle) / sin_val;
+        x2 = x * x;
+        x4 = x2 * x2;
 
-        if (result > 10.0f) return 10.0f;
-        if (result < -10.0f) return -10.0f;
+        numerator = 945.0f - 105.0f * x2 + x4;
+        denominator = x * (945.0f - 420.0f * x2 + 15.0f * x4);
 
-        return result;
+        if (std::abs(denominator) < EPSILON) {
+            return getNaN();
+        }
+
+        return numerator / denominator;
     }
 
     float Hann(float n, float N) {
-        if (isNaN(n) || isNaN(N))
-            return getNaN();
+        float cos_arg, last_N, inv_N_minus_1;
+        static float static_last_N, static_inv_N_minus_1;
 
-        float cos_arg = 180.0f * n / (N - 1);
+        if (isNaN(n) || isNaN(N) || N <= 1.0f) {
+            return getNaN();
+        }
+
+        static_last_N = -1.0f;
+        static_inv_N_minus_1 = 0.0f;
+
+        if (N != static_last_N) {
+            static_last_N = N;
+            static_inv_N_minus_1 = 1.0f / (N - 1.0f);
+        }
+
+        cos_arg = 360.0f * n * static_inv_N_minus_1;
 
         return 0.5f * (1.0f - Cosine(cos_arg));
     }

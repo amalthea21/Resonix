@@ -22,6 +22,10 @@ target_include_directories(resonix PUBLIC
 
 target_compile_options(resonix PRIVATE
         -Wall -Wextra -Wpedantic
+        -O3
+        -ffast-math
+        -march=native
+        -funroll-loops
 )
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)

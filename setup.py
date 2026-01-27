@@ -22,6 +22,7 @@ ext_modules = [
             'src/math/NaN.cpp',
             'src/Filter/FormantFilter.cpp',
             'src/Filter/PassFilter.cpp',
+            'src/Filter/BandpassFilter.cpp',
         ],
         include_dirs=[
             get_pybind_include(),

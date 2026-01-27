@@ -11,7 +11,11 @@ namespace Filter {
         float q, omega, omega_degrees, sin_omega, cos_omega, alpha;
         float b0, b1, b2, a0, a1, a2;
 
-        q = (center_hz / bandwidth_hz) * resonance;
+        q = (center_hz / bandwidth_hz);
+        if (resonance > 0.707f) {
+            q *= (resonance / 0.707f);
+        }
+
         omega = 2.0f * Math::PI * center_hz / Resonix::SAMPLE_RATE;
         omega_degrees = omega * 180.0f / Math::PI;
         sin_omega = Math::Sine(omega_degrees);
