@@ -6,7 +6,7 @@ namespace Math {
         float angle, radians;
 
         auto reduce_angle = [](float a) -> float {
-            a = std::fmod(a, 360.0f);
+            a = Math::fmod(a, 360.0f);
             return a < 0.0f ? a + 360.0f : a;
         };
 
@@ -16,7 +16,7 @@ namespace Math {
         auto poly_sin = [](float x) -> float {
             float x2;
 
-            x = std::fmod(x + PI, TWO_PI) - PI;
+            x = Math::fmod(x + PI, TWO_PI) - PI;
 
             constexpr float c7 = 0.9999966f;
             constexpr float c5 = -0.16664824f;
@@ -34,7 +34,7 @@ namespace Math {
         float angle;
 
         auto reduce_angle = [](float a) -> float {
-            a = std::fmod(a, 360.0f);
+            a = Math::fmod(a, 360.0f);
             return a < 0.0f ? a + 360.0f : a;
         };
 
@@ -45,16 +45,16 @@ namespace Math {
     float Tangent(float degrees) {
         float mod180, radians, x, x2, x4, x6, num, den;
 
-        degrees = std::fmod(degrees, 360.0f);
+        degrees = Math::fmod(degrees, 360.0f);
         if (degrees < 0.0f) degrees += 360.0f;
 
-        mod180 = std::fmod(degrees, 180.0f);
-        if (std::abs(mod180 - 90.0f) < 0.1f) {
+        mod180 = Math::fmod(degrees, 180.0f);
+        if (Math::abs(mod180 - 90.0f) < 0.1f) {
             return getNaN();
         }
 
         radians = degrees * DEG_TO_RAD;
-        radians = std::fmod(radians + PI, TWO_PI) - PI;
+        radians = Math::fmod(radians + PI, TWO_PI) - PI;
 
         x = radians;
 
@@ -71,7 +71,7 @@ namespace Math {
         num = x * (-135135.0f + x2 * (17325.0f + x2 * (-378.0f + x2)));
         den = -135135.0f + x2 * (62370.0f + x2 * (-3150.0f + 28.0f * x2));
 
-        if (std::abs(den) < EPSILON) {
+        if (Math::abs(den) < EPSILON) {
             return getNaN();
         }
 
@@ -81,11 +81,11 @@ namespace Math {
     float Cotangent(float degrees) {
         float x, x2, x4, numerator, denominator, radians, mod180;
 
-        degrees = std::fmod(degrees, 360.0f);
+        degrees = Math::fmod(degrees, 360.0f);
         if (degrees < 0.0f) degrees += 360.0f;
 
-        mod180 = std::fmod(degrees, 180.0f);
-        if (std::abs(mod180) < 0.1f) {
+        mod180 = Math::fmod(degrees, 180.0f);
+        if (Math::abs(mod180) < 0.1f) {
             return getNaN();
         }
 
@@ -99,7 +99,7 @@ namespace Math {
 
         x = radians;
 
-        if (std::abs(x) < 0.001f) {
+        if (Math::abs(x) < 0.001f) {
             return getNaN();
         }
 
@@ -109,7 +109,7 @@ namespace Math {
         numerator = 945.0f - 105.0f * x2 + x4;
         denominator = x * (945.0f - 420.0f * x2 + 15.0f * x4);
 
-        if (std::abs(denominator) < EPSILON) {
+        if (Math::abs(denominator) < EPSILON) {
             return getNaN();
         }
 
