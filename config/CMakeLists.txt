@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_library(resonix STATIC
         ../src/Resonix.cpp
         ../src/generator/Trigonometric.cpp
@@ -21,11 +23,54 @@ target_include_directories(resonix PUBLIC
 )
 
 target_compile_options(resonix PRIVATE
-        -Wall -Wextra -Wpedantic
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wshadow
+        -Wconversion
+        -Wno-unused-parameter
         -O3
         -ffast-math
         -march=native
+        -mtune=native
         -funroll-loops
+        -flto
+        -fno-signed-zeros
+        -fno-trapping-math
+        -fassociative-math
+        -fno-math-errno
+        -frename-registers
+        -fdevirtualize-speculatively
+        -fdevirtualize-at-ltrans
+        -fipa-ra
+        -fipa-pta
+        -fipa-cp-clone
+        -fpredictive-commoning
+        -fsched-pressure
+        -ftree-vectorize
+        -fopt-info-vec
+        -fvariable-expansion-in-unroller
+        -ftree-loop-if-convert
+        -ftree-loop-distribution
+        -ftree-loop-im
+        -ftree-loop-ivcanon
+        -fivopts
+        -ftree-parallelize-loops=4
+        -funsafe-math-optimizations
+        -ffinite-math-only
+        -fno-rounding-math
+        -fno-signaling-nans
+        -fcx-limited-range
+        -fexcess-precision=fast
+)
+
+target_link_options(resonix PRIVATE
+        -flto
+        -fuse-linker-plugin
+)
+
+set_property(TARGET resonix PROPERTY
+        INTERPROCEDURAL_OPTIMIZATION TRUE
 )
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
@@ -51,6 +96,23 @@ if(BUILD_PYTHON_BINDINGS)
 
         set_target_properties(resonix_python PROPERTIES
                 OUTPUT_NAME resonix
+                POSITION_INDEPENDENT_CODE ON
+        )
+
+        target_compile_options(resonix_python PRIVATE
+                -O3
+                -ffast-math
+                -march=native
+                -flto
+        )
+
+        target_link_options(resonix_python PRIVATE
+                -flto
+                -fuse-linker-plugin
+        )
+
+        set_property(TARGET resonix_python PROPERTY
+                INTERPROCEDURAL_OPTIMIZATION TRUE
         )
 
         message(STATUS "Python bindings will be built")
