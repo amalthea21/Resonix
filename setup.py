@@ -19,7 +19,7 @@ ext_modules = [
             'src/generator/Hann.cpp',
             'src/math/Trigonometry.cpp',
             'src/math/Utils.cpp',
-            'src/math/NaN.cpp'
+            'src/math/NaN.cpp',
             'src/math/WindowFunctions.cpp',
             'src/Filter/FormantFilter.cpp',
             'src/Filter/PassFilter.cpp',

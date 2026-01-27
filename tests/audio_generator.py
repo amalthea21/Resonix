@@ -1,5 +1,8 @@
 import resonix
 import soundfile as sf
+import os
+
+os.makedirs('output', exist_ok=True)
 
 duration = 3
 frequency = 110.0

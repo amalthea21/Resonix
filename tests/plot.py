@@ -1,6 +1,9 @@
 import resonix
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+os.makedirs('output', exist_ok=True)
 
 samples = resonix.generate_samples(resonix.Shape.PHASED_HANN, 10, 440.0)
 

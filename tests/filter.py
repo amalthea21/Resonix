@@ -1,6 +1,9 @@
 import resonix
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+os.makedirs('output', exist_ok=True)
 
 duration = 2
 sample_rate = resonix.SAMPLE_RATE
